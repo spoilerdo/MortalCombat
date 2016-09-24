@@ -19,9 +19,12 @@ public class PlayerController : MonoBehaviour
 
     private Rigidbody2D rb;
 
+    //overige bools
     private bool IsRight = true;
     private bool IsAttacking = false;
     private bool IsSliding = false;
+    [HideInInspector]
+    static public bool IsDamaged = false;
 
     Animator animator;
 
@@ -46,7 +49,6 @@ public class PlayerController : MonoBehaviour
         DoSlide();
         Flip(MoveHorizontal);
         Animation();
-
     }
     #region Do Methods
     //Als je op (linkse) enter drukt dan maakt het karakter een aanval.
@@ -95,7 +97,7 @@ public class PlayerController : MonoBehaviour
     {
         if (Input.GetKeyUp(KeyCode.RightShift))
         {
-            IsSliding = false;
+            IsSliding = !IsSliding;
         }
         if (Input.GetKeyDown(KeyCode.RightShift))
         {
@@ -120,6 +122,12 @@ public class PlayerController : MonoBehaviour
         animator.SetBool("IsAttacking", IsAttacking);
         animator.SetBool("IsJumping", IsTakingOff);
         animator.SetBool("IsSliding", IsSliding);
+        animator.SetBool("IsDamaged", IsDamaged);
+
+        if(IsDamaged == true)
+        {
+            IsDamaged = !IsDamaged;
+        }
         //animator.SetFloat("Direction", rb.velocity.x);
         //animator.SetInteger("AttackCombo", AB.Combo);
     }
