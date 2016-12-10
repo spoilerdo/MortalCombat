@@ -5,7 +5,7 @@ public class PositionCamera : MonoBehaviour {
 
     public float fWidth = 9.0f;  // Desired width 
 
-    void Start()
+    void Awake()
     {
 
         float fT = fWidth / Screen.width * Screen.height;

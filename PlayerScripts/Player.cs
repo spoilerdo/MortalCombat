@@ -3,9 +3,8 @@ using UnityEngine.Networking;
 
 public class Player : NetworkBehaviour
 {
-
     [SerializeField]
-    private float MaxHealth = 100;
+    public float MaxHealth = 100;
 
     [SyncVar]
     public float CurrentHealth;
@@ -17,11 +16,13 @@ public class Player : NetworkBehaviour
     private GameObject HealthbarRightObject;
 
     private AttackBoxManager attackBoxManager;
+    private MatchController matchController;
 
     void Awake()
     {
         CurrentHealth = MaxHealth;
         attackBoxManager = GetComponent<AttackBoxManager>();
+        matchController = FindObjectOfType<MatchController>();
     }
     void Start()
     {
@@ -30,24 +31,29 @@ public class Player : NetworkBehaviour
 
         HealthbarRightObject = GameObject.FindGameObjectWithTag("HealthbarRight");
         HealthbarRight = HealthbarRightObject.GetComponent<Healthbar>();
+
     }
     public void TakeDamage(float _Damage)
     {
-        if(CurrentHealth <= 0)
-        {
-            Destroy(gameObject);
-        }
-        else
+        if(CurrentHealth >= 0)
         {
             CurrentHealth -= _Damage;
+            PlayerController.IsDamaged = true;
             Debug.Log("Player: " + CurrentHealth);
         }
     }
     void Update()
     {
+        if (CurrentHealth <= 0)
+        {
+            //Destroy(gameObject);
+            StartCoroutine(matchController.WinningController(attackBoxManager.EnemyName));
+            PlayerController.IsDead = true;
+        }
         if (isLocalPlayer)
         {
             HealthbarLeft.HealthUpdate(CurrentHealth, MaxHealth, attackBoxManager.Combo);
+            HealthbarLeft.PlayerName(gameObject.name);
         }
         else
         {

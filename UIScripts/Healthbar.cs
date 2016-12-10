@@ -10,6 +10,7 @@ public class Healthbar : MonoBehaviour {
 
     public Text HealthText;
     public Text ComboText;
+    public Text playerName;
 
 	void Start () {
         DeafaultScale = new Vector3(1, 1, 1);
@@ -17,9 +18,12 @@ public class Healthbar : MonoBehaviour {
     }
     public void HealthUpdate(float _Health, float _MaxHealth, int Combo)
     {
-        Vector3 NewScale = new Vector3(_Health / _MaxHealth, 1, 1);
-        HealthBar.transform.localScale = NewScale;
-        HealthText.text = "Health: " + _Health;
+        if(_Health / _MaxHealth >= 0)
+        {
+            Vector3 NewScale = new Vector3(_Health / _MaxHealth, 1, 1);
+            HealthBar.transform.localScale = NewScale;
+            HealthText.text = "Health: " + _Health;
+        }
         if(Combo > 0)
         {
             ComboText.text = "Combo X " + Combo;
@@ -28,5 +32,9 @@ public class Healthbar : MonoBehaviour {
         {
             ComboText.text = "";
         }
+    }
+    public void PlayerName(string _playerName)
+    {
+        playerName.text = _playerName;
     }
 }

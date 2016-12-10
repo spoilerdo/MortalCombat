@@ -8,6 +8,13 @@ public class DamageItem : MonoBehaviour {
 
     private float WaitBeforeDestroy = 0.14f;
 
+    private GameObject SpawnpointObject;
+
+    private void Awake()
+    {
+        SpawnpointObject = ItemSpawnManager.RandomSpawnpointObject;
+        ItemSpawnManager.AvailableSpawnpoints.Remove(SpawnpointObject.name);
+    }
     private void OnCollisionEnter2D(Collision2D col)
     {
         if (col.transform.tag == "Player")
@@ -20,6 +27,7 @@ public class DamageItem : MonoBehaviour {
     private IEnumerator DestroyObject()
     {
         yield return new WaitForSeconds(WaitBeforeDestroy);
+        ItemSpawnManager.AvailableSpawnpoints.Add(SpawnpointObject.name);
         Destroy(transform.parent.gameObject);
     }
 }
